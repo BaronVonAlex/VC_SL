@@ -1,3 +1,16 @@
+const { ActivityType } = require('discord.js')
 module.exports = (client) => {
-    console.log(`${client.user.tag} is online.`);
+    try {
+        console.log(`Client is Read. Logged in as ${client.user.tag}`);
+        client.user.setActivity(
+            {
+                name: 'VEGA Conflict',
+                type: ActivityType.Streaming,
+                url: 'https://www.twitch.tv/baronvonalexs',
+                status: 'idle'
+            }
+        );
+    } catch (error) {
+        console.error('Error registering commands:', error);
+    }
 };

@@ -19,7 +19,7 @@ module.exports = {
         try {
             await interaction.deferReply();
 
-            const API_URL = 'https://api.vegaconflict.co'; // Replace with the actual API URL
+            const API_URL = process.env.API_URL; // Replace with the actual API URL
             const response = await axios.get(`${API_URL}/${playerID}`);
             const playerData = response.data;
 

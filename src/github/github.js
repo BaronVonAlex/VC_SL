@@ -12,6 +12,10 @@ async function pullChanges() {
     // Check if the local repository exists, if not, clone it
     const repoExists = await fs.access(githubRepo).then(() => true).catch(() => false);
 
+    if (!repoExists) {
+      await exec(`git clone ${githubRepo}`);
+    }
+
     // Fetch the latest changes from the remote repository
     await exec('git fetch');
 

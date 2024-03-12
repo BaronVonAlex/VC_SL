@@ -1,7 +1,7 @@
 const { ActivityType } = require('discord.js')
 module.exports = (client) => {
     try {
-        console.log(`Client is Read. Logged in as ${client.user.tag}`);
+        console.log(`Client is Ready. Logged in as ${client.user.tag}`);
         client.user.setActivity(
             {
                 name: 'VEGA Conflict',

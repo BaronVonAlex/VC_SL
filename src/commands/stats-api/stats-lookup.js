@@ -24,7 +24,7 @@ module.exports = {
             const playerData = response.data;
 
             const embed = new EmbedBuilder()
-                .setColor(0x0099ff)
+                .setColor(0xffff00)
                 .setTitle(playerData.alias)
                 .setThumbnail(playerData.playerAvatar)
                 .addFields(

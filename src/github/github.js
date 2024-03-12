@@ -25,6 +25,10 @@ async function pullChanges() {
         await executeShellCommand(`git config user.email "${userEmail}"`);
         await executeShellCommand(`git config user.name "${userName}"`);
 
+        // Stage and commit changes
+        await executeShellCommand('git add .');
+        await executeShellCommand('git commit -m "Committing local changes before pull"');
+
         // Fetch changes from the 'main' branch and rebase
         const result = await executeShellCommand('git pull --rebase origin main');
 

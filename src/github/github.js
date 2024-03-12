@@ -1,30 +1,38 @@
-const axios = require('axios');
 const { exec } = require('child_process');
+const fs = require('fs').promises;
+const axios = require('axios');
 require('dotenv').config();
 
 const githubRepo = process.env.GITHUB_NAME_REPO;
-const githubToken = process.env.GITUHB_TOKEN;
+const userEmail = process.env.GITHUB_USER_EMAIL;
+const userName = process.env.GITHUB_USER_NAME;
 
 async function pullChanges() {
     try {
         console.log('Pulling changes from GitHub...');
 
-        // Fetch the latest commit hash from GitHub
-        const latestCommit = await getLatestCommit();
-        if (!latestCommit) {
-            console.error('Unable to fetch the latest commit.');
-            return;
+        // Check if the directory is a Git repository
+        const isGitRepo = await isGitRepository();
+        if (!isGitRepo) {
+            console.log('Initializing Git repository...');
+            await executeShellCommand('git init');
+            await executeShellCommand(`git remote add origin https://github.com/${githubRepo}.git`);
+            await executeShellCommand('git config pull.rebase true'); // Set default pull behavior to rebase
+            console.log('Git repository initialized.');
         }
 
-        // Check the current commit hash
-        const currentCommit = await getCurrentCommit();
-        if (currentCommit === latestCommit) {
-            console.log('No new changes.');
+        // Set user email and name
+        await executeShellCommand(`git config user.email "${userEmail}"`);
+        await executeShellCommand(`git config user.name "${userName}"`);
+
+        // Fetch changes from the 'main' branch and rebase
+        const result = await executeShellCommand('git pull --rebase origin main');
+
+        // Check if conflicts occurred
+        if (result.stderr.includes('Automatic merge failed')) {
+            console.log('Conflicts detected. Please resolve conflicts and run the command again.');
             return;
         }
-
-        // Pull changes
-        await executeShellCommand('git pull');
 
         console.log('Changes pulled successfully.');
     } catch (error) {
@@ -32,18 +40,13 @@ async function pullChanges() {
     }
 }
 
-async function getLatestCommit() {
-    const response = await axios.get(`https://api.github.com/repos/${githubRepo}/commits/main`, {
-        headers: {
-            Authorization: `Bearer ${githubToken}`,
-        },
-    });
-    return response.data.sha;
-}
-
-async function getCurrentCommit() {
-    const { stdout } = await executeShellCommand('git rev-parse HEAD');
-    return stdout.trim();
+async function isGitRepository() {
+    try {
+        await fs.access('.git');
+        return true;
+    } catch (error) {
+        return false;
+    }
 }
 
 function executeShellCommand(command) {

@@ -4,8 +4,6 @@ const axios = require('axios');
 require('dotenv').config();
 
 const githubRepo = process.env.GITHUB_NAME_REPO;
-const userEmail = process.env.GITHUB_USER_EMAIL;
-const userName = process.env.GITHUB_USER_NAME;
 
 async function pullChanges() {
   try {

@@ -13,7 +13,8 @@ module.exports = {
                 .setRequired(true)
         ),
     async run({ interaction }) {
-        const playerID = interaction.options.getString('id');
+        const rawPlayerID = interaction.options.getString('id');
+        const playerID = parseInt(rawPlayerID.replace(/\D/g, ''), 10);
         console.log('player ID: ', playerID);
 
         try {

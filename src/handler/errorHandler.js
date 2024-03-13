@@ -1,9 +1,10 @@
+require('dotenv').config();
 function loadError(client) {
     const { EmbedBuilder, WebhookClient } = require("discord.js");
     const chalk = require('chalk');
    
     const wbc = new WebhookClient({
-        url: 'https://discord.com/api/webhooks/1217568740959326309/GOPU2PhHQ3MllzCMMOOOKY5h67WHIEx4lI5oooAGCj31djDRkM3ELltE7E3rJn-CGEmx'
+        url: process.env.WEBHOOK_URL
     });
 
     let errorembed = new EmbedBuilder()

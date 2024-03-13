@@ -18,6 +18,7 @@
   "homepage": "https://github.com/BaronVonAlex/VC_SL#readme",
   "dependencies": {
     "axios": "^1.6.7",
+    "chalk": "^4.1.2",
     "discord.js": "^14.12.1",
     "djs-commander": "^0.0.50",
     "dotenv": "^16.4.5"

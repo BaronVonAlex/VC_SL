@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
 const { EmbedBuilder } = require('discord.js');
+const { getColor } = require('../../util/getColorUtil');
 const axios = require('axios');
 
 module.exports = {
@@ -23,8 +24,11 @@ module.exports = {
             const response = await axios.get(`${API_URL}/${playerID}`);
             const playerData = response.data;
 
+            const fleetWinColor = playerData.fleetWinPercent;
+            const embedColor = getColor(fleetWinColor)
+
             const embed = new EmbedBuilder()
-                .setColor(0xffff00)
+                .setColor(embedColor)
                 .setTitle(playerData.alias)
                 .setThumbnail(playerData.playerAvatar)
                 .addFields(

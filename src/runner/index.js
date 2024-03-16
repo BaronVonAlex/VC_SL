@@ -3,7 +3,7 @@ const { Client, IntentsBitField } = require('discord.js');
 const { CommandHandler } = require('djs-commander');
 const path = require('path');
 const { pullChanges } = require('../github/github');
-const { loadError } = require('../handler/errorHandler')
+const { loadError } = require('../handler/errorHandler');
 
 const client = new Client({
   intents: [IntentsBitField.Flags.Guilds],

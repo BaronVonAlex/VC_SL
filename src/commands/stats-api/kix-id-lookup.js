@@ -13,20 +13,36 @@ module.exports = {
             option.setName('kixid')
                 .setDescription('Kixeye user ID')
                 .setRequired(true)
+        )
+        .addIntegerOption(option =>
+            option.setName('year')
+                .setDescription('Year for graphs to show')
+                .setRequired(false)
         ),
+
     async run({ interaction }) {
         const playerID = interaction.options.getString('kixid');
-        console.log('Kixeye ID: ', playerID);
+        const year = interaction.options.getInteger('year');
+        console.log('Kixeye ID: ', playerID. year);
 
         try {
             await interaction.deferReply();
 
-            const API_URL = process.env.API_URL;
-            const response = await axios.get(`${API_URL}/${playerID}`);
+            let apiUrl = process.env.API_URL;
+
+            // Modify apiUrl if year is provided
+            if (year) {
+                apiUrl = `${apiUrl}/${playerID}/${year}`;
+            } else {
+                apiUrl = `${apiUrl}/${playerID}`;
+            }
+
+            const response = await axios.get(apiUrl);
             const playerData = response.data;
 
             const fleetWinColor = playerData.fleetWinPercent;
-            const embedColor = getColor(fleetWinColor)
+            const embedColor = getColor(fleetWinColor);
+
             const chartUrl = await generateChartUrl(playerID, playerData);
 
             const embed = new EmbedBuilder()
@@ -35,9 +51,9 @@ module.exports = {
                 .setThumbnail(playerData.playerAvatar)
                 .addFields(
                     { name: ':identification_card: Player ID', value: String(playerData.userGameId), inline: true },
-                    { name: ':coin: Player Name', value: String(playerData.alias), inline: true},
-                    { name: ':page_with_curl: Previous Names', 
-                    value: playerData.previousNames ? playerData.previousNames.map(name => name.alias).join(', ') : 'No previous names', inline: false },
+                    { name: ':coin: Player Name', value: String(playerData.alias), inline: true },
+                    { name: ':page_with_curl: Previous Names',
+                     value: playerData.previousNames ? playerData.previousNames.map(name => name.alias).join(', ') : 'No previous names', inline: false },
                     { name: ':beginner: Level', value: String(playerData.level), inline: true },
                     { name: ':medal: Medals', value: String(playerData.medals), inline: true },
                     { name: ':ringed_planet: Planet', value: String(playerData.planet), inline: true },

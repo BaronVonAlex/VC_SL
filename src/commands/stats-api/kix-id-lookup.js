@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require('discord.js');
 const { EmbedBuilder } = require('discord.js');
 const { getColor } = require('../../util/getColorUtil');
+const { generateChartUrl } = require('../../util/chartUtil');
 const axios = require('axios');
 
 module.exports = {
@@ -26,6 +27,7 @@ module.exports = {
 
             const fleetWinColor = playerData.fleetWinPercent;
             const embedColor = getColor(fleetWinColor)
+            const chartUrl = await generateChartUrl(playerID, playerData);
 
             const embed = new EmbedBuilder()
                 .setColor(embedColor)
@@ -41,10 +43,11 @@ module.exports = {
                     { name: ':ringed_planet: Planet', value: String(playerData.planet), inline: true },
                     { name: ':desktop: Playing Since', value: String(playerData.since), inline: true },
                     { name: ':hourglass: Last Seen', value: String(playerData.seen), inline: true },
-                    { name: ':firecracker: Base Attack', value: `Win: ${String(playerData.baseAttackWin)}, Draws: ${String(playerData.baseAttackDraw)}, Loss: ${String(playerData.baseAttackLoss)} | KD: ${String(playerData.baseAttackKd)}     Winrate: ${(playerData.baseAttackPercent.toFixed(2))}%`, inline: false },
-                    { name: ':shield: Base Defense', value: `Win: ${String(playerData.baseDefenceWin)}, Draws: ${String(playerData.baseDefenceDraw)}, Loss: ${String(playerData.baseDefenceLoss)} | K/D: ${String(playerData.baseDefenceKd)}     Winrate: ${(playerData.baseDefencePercent.toFixed(2))}%`, inline: false },
-                    { name: ':crossed_swords: Fleet vs Fleet', value: `Win: ${String(playerData.fleetWin)}, Draws: ${String(playerData.fleetDraw)}, Loss: ${String(playerData.fleetLoss)} | K/D: ${String(playerData.fleetKd)}     Winrate: ${(playerData.fleetWinPercent.toFixed(2))}%`, inline: false },
+                    { name: `:firecracker: Base Attack: ${String(playerData.baseAttackTotal)}, ${String((playerData.baseAttackPercent.toFixed(2)))}%, ${String(playerData.baseAttackKd)} K/D`, value: `Win: ${String(playerData.baseAttackWin)}, Draws: ${String(playerData.baseAttackDraw)}, Loss: ${String(playerData.baseAttackLoss)}`, inline: false },
+                    { name: `:shield: Base Defense: ${String(playerData.baseDefenceTotal)}, ${String((playerData.baseDefencePercent.toFixed(2)))}%, ${String(playerData.baseDefenceKd)} K/D`, value: `Win: ${String(playerData.baseDefenceWin)}, Draws: ${String(playerData.baseDefenceDraw)}, Loss: ${String(playerData.baseDefenceLoss)}`, inline: false },
+                    { name: `:crossed_swords: Fleet vs Fleet: ${String(playerData.fleetTotal)}, ${String((playerData.fleetWinPercent.toFixed(2)))}%, ${String(playerData.fleetKd)} K/D`, value: `Win: ${String(playerData.fleetWin)}, Draws: ${String(playerData.fleetDraw)}, Loss: ${String(playerData.fleetLoss)}`, inline: false },
                 )
+                .setImage(chartUrl)
                 .setTimestamp().setFooter({ text: `Total Views: ${playerData.playerViews}` });
 
             await interaction.editReply({ embeds: [embed] });

@@ -68,7 +68,7 @@ module.exports = {
             await interaction.editReply({ embeds: [embed] });
 
         } catch (error) {
-            console.error('Error fetching data from API - ', error);
+            console.error('Error fetching data from API - ');
             await interaction.editReply('Player Data is not available');
         }
     },

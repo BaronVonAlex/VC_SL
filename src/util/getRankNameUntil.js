@@ -1,5 +1,3 @@
-// util/rankUtil.js
-
 const rankNames = {
     0: 'Private',
     1: 'Private First Class',
@@ -26,7 +24,7 @@ const rankNames = {
 };
 
 function getRankName(rank) {
-    return rankNames[rank] || 'Unknown Rank'; // Default name if rank is not found
+    return rankNames[rank] || 'Unknown Rank';
 }
 
 module.exports = { getRankName };

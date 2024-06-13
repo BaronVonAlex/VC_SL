@@ -2,7 +2,7 @@
   "name": "vc_sl",
   "version": "1.0.0",
   "description": "Tool for looking up player stats.",
-  "main": "index.js",
+  "main": "src/runner/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

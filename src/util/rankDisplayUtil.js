@@ -1,5 +1,3 @@
-// util/emojiUtil.js
-
 const rankEmojis = {
     0: '<:rank_0:1250755026272653403>',
     1: '<:rank_1:1250755028126273586>',
@@ -26,7 +24,7 @@ const rankEmojis = {
 };
 
 function getRankEmoji(rank) {
-    return rankEmojis[rank] || ':trophy:'; // Default emoji if rank is not found
+    return rankEmojis[rank] || ':trophy:';
 }
 
 module.exports = { getRankEmoji };

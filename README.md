@@ -22,7 +22,7 @@ A Discord bot that tracks player stats from VEGA Conflict using the KIXEYE API. 
 
 1. **Clone the repository:**
     ```sh
-    git clone https://github.com/yourusername/VEGA-Conflict-KIXEYE-API-Discord-Bot.git
+    git clone https://github.com/BaronVonAlex/VC_SL.git
     cd VEGA-Conflict-KIXEYE-API-Discord-Bot
     ```
 

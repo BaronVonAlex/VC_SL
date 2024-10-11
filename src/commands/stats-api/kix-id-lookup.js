@@ -48,9 +48,8 @@ module.exports = {
                     .addFields(
                         { name: ':identification_card: Player ID', value: String(playerData.playerId), inline: true },
                         { name: ':coin: Player Name', value: String(playerData.alias), inline: true },
-                        { name: ':page_with_curl: Previous Names',
-                         value: playerData.previousNames ? playerData.previousNames.map(name => name.alias).join(', ') : 'No previous names', inline: false },
-                        { name: ':beginner: Level', value: String(playerData.level), inline: true },
+                        // { name: ':page_with_curl: Previous Names', value: playerData.previousNames ? playerData.previousNames.map(name => name.alias).join(', ') : 'No previous names', inline: false },
+                        { name: ':beginner: Level', value: String(playerData.level), inline: false },
                         { name: ':medal: Medals', value: String(playerData.medals), inline: true },
                         { name: ':ringed_planet: Planet', value: String(playerData.planet), inline: true },
                         { name: ':desktop: Playing Since', value: playingSince, inline: true },

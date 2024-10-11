@@ -7,73 +7,89 @@ const { convertToDate, convertToRelativeTime } = require('../../util/convertTime
 const axios = require('axios');
 
 module.exports = {
-    run: () => {},
+    run: () => { },
     data: new SlashCommandBuilder()
         .setName('kix_id')
-        .setDescription('player stats by KIXEYE ID.') 
+        .setDescription('player stats by KIXEYE ID.')
         .addStringOption(option =>
             option.setName('kixid')
                 .setDescription('Kixeye user ID')
                 .setRequired(true)
         ),
 
-        async run({ interaction }) {
-            const rawPlayerID = interaction.options.getString('kixid');
-            console.log('player ID: ', rawPlayerID);
-    
-            try {
-                await interaction.deferReply();
-    
-                // Second request to fetch player stats using userId
-                const statsApiUrl = `${process.env.STATS_API_URL}${rawPlayerID}/games/386487958112133`;
-                const secondResponse = await axios.get(statsApiUrl);
-                const playerData = secondResponse.data;
-    
-                // Process playerData and construct the embed as before
-    
-                const baseAttackStats = calculateBattleStats(playerData.baseAttackWin, playerData.baseAttackDraw, playerData.baseAttackLoss);
-                const baseDefenceStats = calculateBattleStats(playerData.baseDefenceWin, playerData.baseDefenceDraw, playerData.baseDefenceLoss);
-                const fleetStats = calculateBattleStats(playerData.fleetWin, playerData.fleetDraw, playerData.fleetLoss);
-                const playingSince = convertToDate(playerData.since);
-                const lastSeen = convertToRelativeTime(playerData.seen);
-    
-                const fleetWinColor = fleetStats.winratePercent;
-                const embedColor = getColor(fleetWinColor);
-    
-    
-                const embed = new EmbedBuilder()
-                    .setColor(embedColor)
-                    .setTitle(playerData.alias)
-                    // .setThumbnail(playerData.playerAvatar)
-                    .addFields(
-                        { name: ':identification_card: Player ID', value: String(playerData.playerId), inline: true },
-                        { name: ':coin: Player Name', value: String(playerData.alias), inline: true },
-                        { name: ':page_with_curl: Previous Names',
-                         value: playerData.previousNames ? playerData.previousNames.map(name => name.alias).join(', ') : 'No previous names', inline: false },
-                        { name: ':beginner: Level', value: String(playerData.level), inline: true },
-                        { name: ':medal: Medals', value: String(playerData.medals), inline: true },
-                        { name: ':ringed_planet: Planet', value: String(playerData.planet), inline: true },
-                        { name: ':desktop: Playing Since', value: playingSince, inline: true },
-                        { name: ':hourglass: Last Seen', value: lastSeen, inline: true },
-                        { name: `:firecracker: Base Attack: ${baseAttackStats.totalBattles}, ${baseAttackStats.winratePercent}%, ${String(baseAttackStats.kdRatio)} K/D`, 
-                            value: `Win: ${String(playerData.baseAttackWin)}, Draws: ${String(playerData.baseAttackDraw)}, Loss: ${String(playerData.baseAttackLoss)}`, 
-                            inline: false },
-                        { name: `:shield: Base Defense: ${baseDefenceStats.totalBattles}, ${baseDefenceStats.winratePercent}%, ${String(baseDefenceStats.kdRatio)} K/D`, 
-                            value: `Win: ${String(playerData.baseDefenceWin)}, Draws: ${String(playerData.baseDefenceDraw)}, Loss: ${String(playerData.baseDefenceLoss)}`, 
-                            inline: false },
-                        { name: `:crossed_swords: Fleet vs Fleet: ${fleetStats.totalBattles}, ${fleetStats.winratePercent}%, ${String(fleetStats.kdRatio)} K/D`, 
-                            value: `Win: ${String(playerData.fleetWin)}, Draws: ${String(playerData.fleetDraw)}, Loss: ${String(playerData.fleetLoss)}`, 
-                            inline: false },
-                    )
-                    // .setImage(chartUrl)
-                    .setTimestamp()
-                    // .setFooter({ text: `Total Views: ${playerData.playerViews}` });
-    
-                await interaction.editReply({ embeds: [embed] });
-    
-            } catch (error) {
-                console.error('Error fetching player data - ', error.message);
-                await interaction.editReply('Player Data is not available');
-            }
-        },
-    };
+    async run({ interaction }) {
+        const rawPlayerID = interaction.options.getString('kixid');
+        console.log('Kixeye ID: ', rawPlayerID);
+
+        try {
+            await interaction.deferReply();
+            // Second request to fetch player stats using userId
+            const statsApiUrl = `${process.env.STATS_API_URL}${rawPlayerID}/games/386487958112133`;
+            const secondResponse = await axios.get(statsApiUrl);
+            const playerData = secondResponse.data;
+
+            // Function to safely get player stats with default values
+            const getPlayerStat = (data, statName, defaultValue = 0) => {
+                return data[statName] !== undefined ? data[statName] : defaultValue;
+            };
+
+            // Calculate battle stats with default values
+            const baseAttackStats = calculateBattleStats(
+                getPlayerStat(playerData, 'baseAttackWin'),
+                getPlayerStat(playerData, 'baseAttackDraw'),
+                getPlayerStat(playerData, 'baseAttackLoss')
+            );
+            const baseDefenceStats = calculateBattleStats(
+                getPlayerStat(playerData, 'baseDefenceWin'),
+                getPlayerStat(playerData, 'baseDefenceDraw'),
+                getPlayerStat(playerData, 'baseDefenceLoss')
+            );
+            const fleetStats = calculateBattleStats(
+                getPlayerStat(playerData, 'fleetWin'),
+                getPlayerStat(playerData, 'fleetDraw'),
+                getPlayerStat(playerData, 'fleetLoss')
+            );
+
+            const playingSince = convertToDate(getPlayerStat(playerData, 'since'));
+            const lastSeen = convertToRelativeTime(getPlayerStat(playerData, 'seen'));
+
+            const fleetWinColor = fleetStats.winratePercent;
+            const embedColor = getColor(fleetWinColor);
+
+            const embed = new EmbedBuilder()
+                .setColor(embedColor)
+                .setTitle(playerData.alias)
+                .addFields(
+                    { name: ':identification_card: Player ID', value: String(getPlayerStat(playerData, 'playerId')), inline: true },
+                    { name: ':coin: Player Name', value: String(playerData.alias), inline: false },
+                    { name: ':beginner: Level', value: String(getPlayerStat(playerData, 'level')), inline: true },
+                    { name: ':medal: Medals', value: String(getPlayerStat(playerData, 'medals')), inline: true },
+                    { name: ':ringed_planet: Planet', value: String(getPlayerStat(playerData, 'planet')), inline: true },
+                    { name: ':desktop: Playing Since', value: playingSince, inline: true },
+                    { name: ':hourglass: Last Seen', value: lastSeen, inline: true },
+                    {
+                        name: `:firecracker: Base Attack: ${baseAttackStats.totalBattles}, ${baseAttackStats.winratePercent}%, ${String(baseAttackStats.kdRatio)} K/D`,
+                        value: `Win: ${String(getPlayerStat(playerData, 'baseAttackWin'))}, Draws: ${String(getPlayerStat(playerData, 'baseAttackDraw'))}, Loss: ${String(getPlayerStat(playerData, 'baseAttackLoss'))}`,
+                        inline: false
+                    },
+                    {
+                        name: `:shield: Base Defense: ${baseDefenceStats.totalBattles}, ${baseDefenceStats.winratePercent}%, ${String(baseDefenceStats.kdRatio)} K/D`,
+                        value: `Win: ${String(getPlayerStat(playerData, 'baseDefenceWin'))}, Draws: ${String(getPlayerStat(playerData, 'baseDefenceDraw'))}, Loss: ${String(getPlayerStat(playerData, 'baseDefenceLoss'))}`,
+                        inline: false
+                    },
+                    {
+                        name: `:crossed_swords: Fleet vs Fleet: ${fleetStats.totalBattles}, ${fleetStats.winratePercent}%, ${String(fleetStats.kdRatio)} K/D`,
+                        value: `Win: ${String(getPlayerStat(playerData, 'fleetWin'))}, Draws: ${String(getPlayerStat(playerData, 'fleetDraw'))}, Loss: ${String(getPlayerStat(playerData, 'fleetLoss'))}`,
+                        inline: false
+                    }
+                )
+                .setTimestamp();
+
+            await interaction.editReply({ embeds: [embed] });
+
+        } catch (error) {
+            console.error('Error fetching player data - ', error.message);
+            await interaction.editReply('Player Data is not available');
+        }
+    },
+};

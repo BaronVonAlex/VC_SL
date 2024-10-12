@@ -1,0 +1,50 @@
+Terms of Service
+Last Updated: 12 October, 2024
+
+1. Introduction
+Welcome to VC_SL (the "Bot"). By using this Bot, you agree to abide by these Terms of Service (the "Terms"). These Terms govern your access and use of the Bot, including any features and services provided by the Bot.
+
+If you do not agree to these Terms, please refrain from using the Bot.
+
+2. Description of Service
+VC_SL retrieves and provides player statistics from [insert API provider] (the "API") to users within Discord. By using the Bot, users can request data related to player performance, including, but not limited to, wins, losses, total battles, and other available statistics.
+
+3. User Eligibility
+By using this Bot, you represent that:
+
+You are at least 13 years old (or the minimum age required to use Discord in your country).
+You have the legal capacity to agree to these Terms.
+4. Data Usage and Privacy
+User Data: The Bot may collect certain data related to player statistics as provided by the API. The Bot does not store or share any personal information from users unless explicitly stated.
+Third-Party API: The Bot interacts with a third-party API ([insert API provider]), and data accuracy is subject to the availability and reliability of the API. We are not responsible for any inaccuracies or delays in the data provided.
+User Responsibility: Users are responsible for ensuring they have the necessary rights to access any player data they request using the Bot.
+5. API Limitations and Downtime
+The Bot relies on a third-party API for data retrieval. Availability of data may be limited due to:
+
+API rate limits
+API changes or outages
+Maintenance or unexpected downtimes We do not guarantee uninterrupted access to the Bot or the availability of player statistics.
+6. Prohibited Activities
+You agree not to:
+
+Use the Bot for illegal purposes or activities.
+Use the Bot in a way that violates any laws or regulations.
+Reverse engineer, modify, or decompile the Bot’s code.
+Attempt to abuse or overload the Bot (e.g., sending excessive requests).
+7. Changes to the Terms
+We reserve the right to modify these Terms at any time. Changes will be effective upon posting the revised Terms on our [insert website link, if applicable] or within the Bot's description. Continued use of the Bot after any such changes constitutes your acceptance of the new Terms.
+
+8. Disclaimer of Warranties
+The Bot is provided on an "as-is" basis without warranties of any kind, either express or implied, including but not limited to warranties of merchantability or fitness for a particular purpose. We do not guarantee the accuracy or completeness of any statistics or information provided.
+
+9. Limitation of Liability
+In no event will VC_SL or its developers be liable for any damages arising from the use of the Bot, including but not limited to data loss, incorrect information, or any indirect, incidental, or consequential damages.
+
+10. Termination
+We reserve the right to suspend or terminate access to the Bot at our discretion, with or without notice, for any reason, including violations of these Terms.
+
+11. Governing Law
+These Terms shall be governed and construed in accordance with the laws of [Insert Jurisdiction], without regard to its conflict of law provisions.
+
+12. Contact Information
+If you have any questions or concerns regarding these Terms, please contact us at [insert contact information].

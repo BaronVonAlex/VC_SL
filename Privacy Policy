@@ -1,0 +1,50 @@
+Privacy Policy
+Last Updated: 12 October, 2024
+
+1. Introduction
+This Privacy Policy explains how VC_SL ("we", "us", or "our") collects, uses, and discloses information when you use our Discord bot (the "Bot"). By using VC_SL, you agree to the collection and use of information in accordance with this policy. If you do not agree, please refrain from using the Bot.
+
+2. Information We Collect
+VC_SL collects minimal information necessary to provide player statistics and related services. The information we collect is as follows:
+
+a. Player Data (from API)
+Player statistics: This includes data such as win/loss records, total battles, and other performance metrics provided by a third-party API ([insert API provider]).
+Player identifiers: Such as usernames, in-game IDs, or other relevant data needed to retrieve player statistics from the API.
+b. Usage Data
+We may collect non-identifiable usage data, such as:
+
+The number of requests made to the Bot.
+Performance metrics (e.g., response times, usage trends). This data helps us maintain and improve the Bot.
+c. No Personal Data
+We do not collect or store personal information such as names, email addresses, or Discord account details unless explicitly provided by you for support purposes.
+
+3. How We Use the Information
+The information we collect is used solely to provide the Bot’s functionality, including:
+
+Retrieving player statistics from the API.
+Displaying the requested information to users.
+Improving and optimizing the Bot’s performance and user experience.
+We do not sell, rent, or share your information with third parties for marketing or any other purposes.
+
+4. Data Sharing and Disclosure
+We may share or disclose information in the following circumstances:
+
+Third-Party API: Player statistics and related data are retrieved from a third-party API ([insert API provider]) to fulfill user requests.
+Legal Compliance: If required by law or in response to a valid legal request, we may share data to comply with legal obligations or protect our rights.
+5. Data Security
+We are committed to protecting your data and use reasonable measures to ensure its security. However, no method of transmission or storage is 100% secure. We cannot guarantee the absolute security of the information transmitted to or stored by the Bot.
+
+6. Data Retention
+VC_SL does not permanently store any user data, such as player statistics, beyond the scope of the active session in which it was requested. Data is fetched in real-time from the API and is not retained after the request is fulfilled.
+
+7. Your Data Rights
+Since VC_SL does not collect personal data or retain information, there are no specific rights to request data deletion or modification. If you believe your data is being mishandled, please contact us at [insert contact information].
+
+8. Children’s Privacy
+VC_SL is not intended for use by individuals under the age of 13. We do not knowingly collect any personal information from children under 13. If we become aware that a child under 13 has provided us with personal information, we will take steps to delete such information.
+
+9. Changes to This Privacy Policy
+We may update this Privacy Policy from time to time. Changes will be posted on our [insert website link, if applicable] or within the Bot's description. Continued use of VC_SL after any changes constitutes your acceptance of the revised Privacy Policy.
+
+10. Contact Information
+If you have any questions or concerns regarding this Privacy Policy, please contact us at [insert contact information].

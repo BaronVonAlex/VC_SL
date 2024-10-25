@@ -1,5 +1,3 @@
-// statsUtil.js
-
 /**
  * Calculate total battles and winrate percentage.
  * @param {number} wins - The number of wins.

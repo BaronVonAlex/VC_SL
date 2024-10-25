@@ -3,9 +3,11 @@ const { EmbedBuilder } = require('discord.js');
 const { getColor } = require('../../util/getColorUtil');
 const { calculateBattleStats } = require('../../util/statsUtil');
 const { convertToDate, convertToRelativeTime } = require('../../util/convertTime');
-const { fetchUserId, fetchPlayerStats, fetchUserAvatar } = require('../../util/api');
 const generatePlayerFields = require('../../util/embedFields');
-const axios = require('axios');
+const { generateChartUrl } = require('../../util/chartUtil');
+const { fetchPlayerDetails, findOrCreateUser, formatUsernameHistory } = require('../../util/playerDataUtil');
+const { findOrCreateWinrateRecord } = require('../../util/winrateUtil');
+const { Winrate } = require('../../util/db');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -16,7 +18,7 @@ module.exports = {
                 .setDescription('The player ID')
                 .setRequired(true)
         ),
-        
+
     async run({ interaction }) {
         const rawPlayerID = interaction.options.getString('id');
         const playerID = parseInt(rawPlayerID.replace(/\D/g, ''), 10);
@@ -25,15 +27,10 @@ module.exports = {
         try {
             await interaction.deferReply();
 
-            // Fetch userId
-            const userId = await fetchUserId(playerID);
+            // Fetch player details
+            const { userId, playerData, largeAvatarUrl } = await fetchPlayerDetails(playerID);
             
-            // Fetch player stats
-            const playerData = await fetchPlayerStats(userId);
-            
-            // Fetch player avatar
-            const largeAvatarUrl = await fetchUserAvatar(userId);
-
+            // Calculate battle stats
             const baseAttackStats = calculateBattleStats(
                 playerData.baseAttackWin || 0,
                 playerData.baseAttackDraw || 0,
@@ -56,18 +53,41 @@ module.exports = {
             const fleetWinColor = fleetStats.winratePercent;
             const embedColor = getColor(fleetWinColor);
 
+            // Find or create user
+            const user = await findOrCreateUser(playerID, playerData.alias);
+
+            // Fetch historical winrate data for chart generation
+            const historicalData = await Winrate.findAll({
+                where: { userId: playerID },
+                order: [['month', 'ASC']]
+            });
+
+            // Generate the chart URL using historical data
+            const chartUrl = await generateChartUrl(playerID, { historical: historicalData });
+
+            // Format username history
+            const formattedUsernameHistory = formatUsernameHistory(user);
+
             const embed = new EmbedBuilder()
                 .setColor(embedColor)
                 .setTitle(playerData.alias)
                 .setThumbnail(largeAvatarUrl)
-                .addFields(generatePlayerFields(playerData, baseAttackStats, baseDefenceStats, fleetStats, playingSince, lastSeen))
-                .setTimestamp();
+                .addFields(generatePlayerFields(playerData, baseAttackStats, baseDefenceStats, fleetStats, playingSince, lastSeen, formattedUsernameHistory))
+                .setTimestamp()
+                .setImage(chartUrl);
+
+            // Store User and Winrate Information in Database
+            await findOrCreateWinrateRecord(playerID, baseAttackStats.winratePercent, baseDefenceStats.winratePercent, fleetStats.winratePercent);
 
             await interaction.editReply({ embeds: [embed] });
 
         } catch (error) {
             console.error('Error fetching player data - ', error.message);
-            await interaction.editReply('Player Data is not available');
+            try {
+                await interaction.editReply('Player Data is not available');
+            } catch (editError) {
+                console.error('Failed to edit reply:', editError);
+            }
         }
     },
 };

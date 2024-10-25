@@ -2,10 +2,11 @@ const getPlayerStat = (data, statName, defaultValue = 0) => {
     return data[statName] !== undefined ? data[statName] : defaultValue;
 };
 
-function generatePlayerFields(playerData, baseAttackStats, baseDefenceStats, fleetStats, playingSince, lastSeen) {
+function generatePlayerFields(playerData, baseAttackStats, baseDefenceStats, fleetStats, playingSince, lastSeen, formattedUsernameHistory) {
     return [
         { name: ':identification_card: Player ID', value: String(getPlayerStat(playerData, 'playerId')), inline: true },
         { name: ':coin: Player Name', value: String(playerData.alias), inline: false },
+        { name: ':page_with_curl: Previous Names', value: formattedUsernameHistory },
         { name: ':beginner: Level', value: String(getPlayerStat(playerData, 'level')), inline: true },
         { name: ':medal: Medals', value: String(getPlayerStat(playerData, 'medals')), inline: true },
         { name: ':ringed_planet: Planet', value: String(getPlayerStat(playerData, 'planet')), inline: true },

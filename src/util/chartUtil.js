@@ -1,4 +1,5 @@
 const axios = require('axios');
+const { Winrate } = require('../util/db');
 
 // Function to get month name from month number
 function getMonthName(monthNumber) {
@@ -6,8 +7,18 @@ function getMonthName(monthNumber) {
     return months[monthNumber - 1] || '';
 }
 
-async function generateChartUrl(playerID, playerData) {
-    const historicalData = playerData.historical.sort((a, b) => parseInt(a.month) - parseInt(b.month));
+// Function to fetch historical winrate data from the database
+async function fetchWinrateHistory(playerID) {
+    const winrateRecords = await Winrate.findAll({
+        where: { userId: playerID },
+        order: [['month', 'ASC']], // Order by month
+    });
+
+    return winrateRecords;
+}
+
+async function generateChartUrl(playerID) {
+    const historicalData = await fetchWinrateHistory(playerID);
 
     // Prepare data for the chart
     const labels = Array.from({ length: 12 }, (_, i) => getMonthName(i + 1));
@@ -16,10 +27,10 @@ async function generateChartUrl(playerID, playerData) {
     const baseDefData = Array.from({ length: 12 }, () => null);
 
     for (const entry of historicalData) {
-        const monthIndex = parseInt(entry.month) - 1;
-        fleetAtkData[monthIndex] = entry.fleet_atk;
-        baseAtkData[monthIndex] = entry.base_atk;
-        baseDefData[monthIndex] = entry.base_def;
+        const monthIndex = entry.month - 1; // Adjust index since months are 1-based
+        fleetAtkData[monthIndex] = entry.fleetWinrate; // Adjust field names as necessary
+        baseAtkData[monthIndex] = entry.baseAttackWinrate; // Adjust field names as necessary
+        baseDefData[monthIndex] = entry.baseDefenceWinrate; // Adjust field names as necessary
     }
 
     // Create the chart data object
@@ -32,26 +43,25 @@ async function generateChartUrl(playerID, playerData) {
                     label: 'Fleet Attack',
                     data: fleetAtkData,
                     borderColor: 'red',
-                    fill: false
+                    fill: false,
                 },
                 {
                     label: 'Base Attack',
                     data: baseAtkData,
                     borderColor: 'yellow',
-                    fill: false
+                    fill: false,
                 },
                 {
                     label: 'Base Defense',
                     data: baseDefData,
                     borderColor: 'green',
-                    fill: false
-                }
-            ]
-        }
+                    fill: false,
+                },
+            ],
+        },
     };
 
     const chartUrl = `https://quickchart.io/chart?c=${encodeURIComponent(JSON.stringify(chartData))}`;
-
     return chartUrl;
 }
 

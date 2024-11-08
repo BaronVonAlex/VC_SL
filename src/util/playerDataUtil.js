@@ -9,15 +9,30 @@ async function fetchPlayerDetails(playerID) {
 }
 
 async function findOrCreateUser(playerID, playerAlias) {
-    const [user] = await User.findOrCreate({
+    const [user, created] = await User.findOrCreate({
         where: { id: playerID },
         defaults: { username_history: [playerAlias] }
     });
+
+    if (!created) {
+        let usernameHistory = Array.isArray(user.username_history) 
+            ? user.username_history 
+            : JSON.parse(user.username_history || '[]');
+
+        if (!usernameHistory.includes(playerAlias)) {
+            usernameHistory.push(playerAlias);
+            user.username_history = JSON.stringify(usernameHistory);
+            await user.save();
+        }
+    }
+
     return user;
 }
 
 function formatUsernameHistory(user) {
-    let usernameHistory = Array.isArray(user.username_history) ? user.username_history : JSON.parse(user.username_history || '[]');
+    let usernameHistory = Array.isArray(user.username_history) 
+        ? user.username_history 
+        : JSON.parse(user.username_history || '[]');
     return usernameHistory.length > 0 ? usernameHistory.join(', ') : "No history available";
 }
 

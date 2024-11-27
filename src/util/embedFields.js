@@ -8,7 +8,7 @@ function generatePlayerFields(playerData, baseAttackStats, baseDefenceStats, fle
         { name: '<:VCIcon:1300134586717569149> Player Name', value: String(playerData.alias), inline: true },
         { name: '<:Intel:1300137270950625392> Previous Names', value: formattedUsernameHistory, inline: false },
         { name: '<:ModuleUpgrade:1300128880459517992> Level', value: String(getPlayerStat(playerData, 'level')), inline: true },
-        { name: '<:SolarShardsGold:1300134738736054363> Medals', value: String(getPlayerStat(playerData, 'medals')), inline: true },
+        { name: '<:Medal_Icon:1305439281334063104> Medals', value: String(getPlayerStat(playerData, 'medals')), inline: true },
         { name: ':ringed_planet: Planet', value: String(getPlayerStat(playerData, 'planet')), inline: true },
         { name: '<:Time:1300129476780363908> Playing Since', value: playingSince, inline: true },
         { name: '<:TimeTokens:1300134836425719889> Last Seen', value: lastSeen, inline: true },

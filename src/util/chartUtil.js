@@ -1,13 +1,11 @@
 const axios = require('axios');
 const { Winrate } = require('../util/db');
 
-// Function to get month name from month number
 function getMonthName(monthNumber) {
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     return months[monthNumber - 1] || '';
 }
 
-// Function to fetch historical winrate data from the database
 async function fetchWinrateHistory(playerID) {
     const winrateRecords = await Winrate.findAll({
         where: { userId: playerID },
@@ -20,7 +18,6 @@ async function fetchWinrateHistory(playerID) {
 async function generateChartUrl(playerID) {
     const historicalData = await fetchWinrateHistory(playerID);
 
-    // Prepare data for the chart
     const labels = Array.from({ length: 12 }, (_, i) => getMonthName(i + 1));
     const fleetAtkData = Array.from({ length: 12 }, () => null);
     const baseAtkData = Array.from({ length: 12 }, () => null);
@@ -32,6 +29,15 @@ async function generateChartUrl(playerID) {
         baseAtkData[monthIndex] = entry.baseAttackWinrate; // Adjust field names as necessary
         baseDefData[monthIndex] = entry.baseDefenceWinrate; // Adjust field names as necessary
     }
+
+    // Combine all data to calculate the range
+    const allData = [...fleetAtkData, ...baseAtkData, ...baseDefData].filter(value => value !== null);
+    const minValue = Math.min(...allData);
+    const maxValue = Math.max(...allData);
+
+    // Set the y-axis range
+    const yMin = Math.max(0, minValue - 5); // Avoid going below 0
+    const yMax = Math.min(100, maxValue + 5); // Avoid going above 100
 
     // Create the chart data object
     const chartData = {
@@ -58,6 +64,14 @@ async function generateChartUrl(playerID) {
                     fill: false,
                 },
             ],
+        },
+        options: {
+            scales: {
+                y: {
+                    min: yMin,
+                    max: yMax,
+                },
+            },
         },
     };
 

@@ -6,17 +6,20 @@ function getMonthName(monthNumber) {
     return months[monthNumber - 1] || '';
 }
 
-async function fetchWinrateHistory(playerID) {
+async function fetchWinrateHistory(playerID, year) {
     const winrateRecords = await Winrate.findAll({
-        where: { userId: playerID },
-        order: [['month', 'ASC']], // Order by month
+        where: {
+            userId: playerID,
+            year,
+        },
+        order: [['month', 'ASC']],
     });
 
     return winrateRecords;
 }
 
-async function generateChartUrl(playerID) {
-    const historicalData = await fetchWinrateHistory(playerID);
+async function generateChartUrl(playerID, { year }) {
+    const historicalData = await fetchWinrateHistory(playerID, year);
 
     const labels = Array.from({ length: 12 }, (_, i) => getMonthName(i + 1));
     const fleetAtkData = Array.from({ length: 12 }, () => null);
@@ -25,21 +28,18 @@ async function generateChartUrl(playerID) {
 
     for (const entry of historicalData) {
         const monthIndex = entry.month - 1; // Adjust index since months are 1-based
-        fleetAtkData[monthIndex] = entry.fleetWinrate; // Adjust field names as necessary
-        baseAtkData[monthIndex] = entry.baseAttackWinrate; // Adjust field names as necessary
-        baseDefData[monthIndex] = entry.baseDefenceWinrate; // Adjust field names as necessary
+        fleetAtkData[monthIndex] = entry.fleetWinrate; 
+        baseAtkData[monthIndex] = entry.baseAttackWinrate; 
+        baseDefData[monthIndex] = entry.baseDefenceWinrate; 
     }
 
-    // Combine all data to calculate the range
     const allData = [...fleetAtkData, ...baseAtkData, ...baseDefData].filter(value => value !== null);
     const minValue = Math.min(...allData);
     const maxValue = Math.max(...allData);
 
-    // Set the y-axis range
-    const yMin = Math.max(0, minValue - 5); // Avoid going below 0
-    const yMax = Math.min(100, maxValue + 5); // Avoid going above 100
+    const yMin = Math.max(0, minValue - 5);
+    const yMax = Math.min(100, maxValue + 5);
 
-    // Create the chart data object
     const chartData = {
         type: 'line',
         data: {

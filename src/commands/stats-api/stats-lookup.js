@@ -7,7 +7,6 @@ const generatePlayerFields = require('../../util/embedFields');
 const { generateChartUrl } = require('../../util/chartUtil');
 const { fetchPlayerDetails, findOrCreateUser, formatUsernameHistory } = require('../../util/playerDataUtil');
 const { findOrCreateWinrateRecord } = require('../../util/winrateUtil');
-const { Winrate } = require('../../util/db');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -27,9 +26,9 @@ module.exports = {
         async run({ interaction }) {
             const rawPlayerID = interaction.options.getString('id');
             const playerID = parseInt(rawPlayerID.replace(/\D/g, ''), 10);
-            const yearOption = interaction.options.getInteger('year'); // Optional year input
+            const yearOption = interaction.options.getInteger('year');
             const currentYear = new Date().getFullYear();
-            const targetYear = yearOption || currentYear; // Use user-specified year or default to current year
+            const targetYear = yearOption || currentYear;
     
             console.log('player ID:', playerID);
             console.log('year:', targetYear);
@@ -37,10 +36,8 @@ module.exports = {
             try {
                 await interaction.deferReply();
     
-                // Fetch player details
                 const { userId, playerData, largeAvatarUrl } = await fetchPlayerDetails(playerID);
                 
-                // Calculate battle stats
                 const baseAttackStats = calculateBattleStats(
                     playerData.baseAttackWin || 0,
                     playerData.baseAttackDraw || 0,
@@ -62,23 +59,8 @@ module.exports = {
     
                 const fleetWinColor = fleetStats.winratePercent;
                 const embedColor = getColor(fleetWinColor);
-    
-                // Find or create user
                 const user = await findOrCreateUser(playerID, playerData.alias);
-    
-                // Fetch historical winrate data for the specified or current year
-                const historicalData = await Winrate.findAll({
-                    where: {
-                        userId: playerID,
-                        year: targetYear
-                    },
-                    order: [['month', 'ASC']]
-                });
-    
-                // Generate the chart URL using historical data
-                const chartUrl = await generateChartUrl(playerID, { historical: historicalData });
-    
-                // Format username history
+                const chartUrl = await generateChartUrl(playerID, { year: targetYear });
                 const formattedUsernameHistory = formatUsernameHistory(user);
     
                 const embed = new EmbedBuilder()
@@ -88,8 +70,7 @@ module.exports = {
                     .addFields(generatePlayerFields(playerData, baseAttackStats, baseDefenceStats, fleetStats, playingSince, lastSeen, formattedUsernameHistory))
                     .setTimestamp()
                     .setImage(chartUrl);
-    
-                // Store User and Winrate Information in Database
+
                 await findOrCreateWinrateRecord(playerID, baseAttackStats.winratePercent, baseDefenceStats.winratePercent, fleetStats.winratePercent);
     
                 await interaction.editReply({ embeds: [embed] });

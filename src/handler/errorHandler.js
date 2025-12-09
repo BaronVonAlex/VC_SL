@@ -18,14 +18,12 @@ function loadError(client) {
         wbc.send({embeds: [errorembed.setTitle("An error occured").setDescription(`**BEFORE EXIT LOGS**\n\`\`\`\n${code}\n\`\`\``)]})
     });
     process.on("exit", (error) => {
-        // If You Want You Can Use
         console.log(chalk.yellow("[AntiCrash] | [Exit_Logs] | [Start]  : ==============="));
         console.log(error);
         console.log(chalk.yellow("[AntiCrash] | [Exit_Logs] | [End] : ==============="));
         wbc.send({embeds: [errorembed.setTitle("An error occured").setDescription(`**EXIT LOGS**\n\`\`\`\n${error}\n\`\`\``)]})
     });
     process.on("unhandledRejection", async (reason, promise) => {
-        // Needed
         console.log(chalk.yellow("[AntiCrash] | [UnhandledRejection_Logs] | [start] : ==============="));
         console.log(reason);
         console.log(chalk.yellow("[AntiCrash] | [UnhandledRejection_Logs] | [end] : ==============="));
@@ -33,28 +31,24 @@ function loadError(client) {
         
     });
     process.on("rejectionHandled", (promise) => {
-        // If You Want You Can Use
         console.log(chalk.yellow("[AntiCrash] | [RejectionHandled_Logs] | [Start] : ==============="));
         console.log(promise);
         console.log(chalk.yellow("[AntiCrash] | [RejectionHandled_Logs] | [End] : ==============="));
         wbc.send({embeds: [errorembed.setTitle("An error occured").setDescription(`**REJECTION_HANDLED_LOGS**\n\`\`\`\n${promise}\n\`\`\``)]})
     });
     process.on("uncaughtException", (err, origin) => {
-        // Needed
         console.log(chalk.yellow("[AntiCrash] | [UncaughtException_Logs] | [Start] : ==============="));
         console.log(err);
         console.log(chalk.yellow("[AntiCrash] | [UncaughtException_Logs] | [End] : ==============="));
         wbc.send({embeds: [errorembed.setTitle("An error occured").setDescription(`**UNCAUGHT_EXCEPTION_LOGS**\n\`\`\`\n${err}\n\`\`\` \`ORIGIN: ${origin}\``)]}) 
     });
     process.on("uncaughtExceptionMonitor", (err, origin) => {
-        // Needed
         console.log(chalk.yellow("[AntiCrash] | [UncaughtExceptionMonitor_Logs] | [Start] : ==============="));
         console.log(err);
         console.log(chalk.yellow("[AntiCrash] | [UncaughtExceptionMonitor_Logs] | [End] : ==============="));
         wbc.send({embeds: [errorembed.setTitle("An error occured").setDescription(`**UNCAUGHT_EXCEPTION_MONITOR_LOGS**\n\`\`\`\n${err}\n\`\`\` \`ORIGIN: ${origin}\``)]})
     });
     process.on("warning", (warning) => {
-        // If You Want You Can Use
         console.log(chalk.yellow("[AntiCrash] | [Warning_Logs] | [Start] : ==============="));
         console.log(warning);
         console.log(chalk.yellow("[AntiCrash] | [Warning_Logs] | [End] : ==============="));

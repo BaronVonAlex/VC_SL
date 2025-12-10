@@ -1,6 +1,6 @@
 require('dotenv').config();
 const { Client, IntentsBitField } = require('discord.js');
-const { CommandHandler } = require('djs-commander');
+const { CommandHandler } = require('@baronvonalex/djs-commander');
 const path = require('path');
 const { loadError } = require('../handler/errorHandler');
 

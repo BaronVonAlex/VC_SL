@@ -1,6 +1,6 @@
 {
   "name": "vc_sl",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Tool for looking up player stats.",
   "main": "src/runner/index.js",
   "scripts": {

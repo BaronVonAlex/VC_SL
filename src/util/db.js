@@ -13,7 +13,7 @@ const sequelize = new Sequelize(
     }
 );
 
-// User table (existing)
+// User table
 const User = sequelize.define('User', {
     id: {
         type: DataTypes.INTEGER,
@@ -26,7 +26,7 @@ const User = sequelize.define('User', {
     }
 });
 
-// Winrate table (new)
+// Winrate table
 const Winrate = sequelize.define('Winrate', {
     userId: {
         type: DataTypes.INTEGER,
@@ -54,6 +54,42 @@ const Winrate = sequelize.define('Winrate', {
     },
     fleetWinrate: {
         type: DataTypes.FLOAT,
+        allowNull: true
+    },
+    baseAttackWin: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+    },
+    baseAttackLoss: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+    },
+    baseAttackDraw: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+    },
+    baseDefenceWin: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+    },
+    baseDefenceLoss: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+    },
+    baseDefenceDraw: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+    },
+    fleetWin: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+    },
+    fleetLoss: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+    },
+    fleetDraw: {
+        type: DataTypes.INTEGER,
         allowNull: true
     }
 }, {

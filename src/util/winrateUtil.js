@@ -1,8 +1,14 @@
 const { Winrate } = require('./db');
 
-async function findOrCreateWinrateRecord(playerID, baseAttackWinrate, baseDefenceWinrate, fleetWinrate) {
+async function findOrCreateWinrateRecord(playerID, baseAttackWinrate, baseDefenceWinrate, fleetWinrate, rawStats = {}) {
     const currentMonth = new Date().getMonth() + 1;
     const currentYear = new Date().getFullYear();
+
+    const {
+        baseAttackWin, baseAttackLoss, baseAttackDraw,
+        baseDefenceWin, baseDefenceLoss, baseDefenceDraw,
+        fleetWin, fleetLoss, fleetDraw
+    } = rawStats;
 
     const [winrateRecord, winrateCreated] = await Winrate.findOrCreate({
         where: {
@@ -14,7 +20,10 @@ async function findOrCreateWinrateRecord(playerID, baseAttackWinrate, baseDefenc
             baseAttackWinrate,
             baseDefenceWinrate,
             fleetWinrate,
-            year: currentYear
+            year: currentYear,
+            baseAttackWin, baseAttackLoss, baseAttackDraw,
+            baseDefenceWin, baseDefenceLoss, baseDefenceDraw,
+            fleetWin, fleetLoss, fleetDraw
         }
     });
 
@@ -22,6 +31,15 @@ async function findOrCreateWinrateRecord(playerID, baseAttackWinrate, baseDefenc
         winrateRecord.baseAttackWinrate = baseAttackWinrate;
         winrateRecord.baseDefenceWinrate = baseDefenceWinrate;
         winrateRecord.fleetWinrate = fleetWinrate;
+        winrateRecord.baseAttackWin = baseAttackWin;
+        winrateRecord.baseAttackLoss = baseAttackLoss;
+        winrateRecord.baseAttackDraw = baseAttackDraw;
+        winrateRecord.baseDefenceWin = baseDefenceWin;
+        winrateRecord.baseDefenceLoss = baseDefenceLoss;
+        winrateRecord.baseDefenceDraw = baseDefenceDraw;
+        winrateRecord.fleetWin = fleetWin;
+        winrateRecord.fleetLoss = fleetLoss;
+        winrateRecord.fleetDraw = fleetDraw;
         await winrateRecord.save();
     }
 

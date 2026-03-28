@@ -91,7 +91,18 @@ module.exports = {
                 playerID,
                 baseAttackStats.winratePercent,
                 baseDefenceStats.winratePercent,
-                fleetStats.winratePercent
+                fleetStats.winratePercent,
+                {
+                    baseAttackWin: playerData.baseAttackWin,
+                    baseAttackLoss: playerData.baseAttackLoss,
+                    baseAttackDraw: playerData.baseAttackDraw,
+                    baseDefenceWin: playerData.baseDefenceWin,
+                    baseDefenceLoss: playerData.baseDefenceLoss,
+                    baseDefenceDraw: playerData.baseDefenceDraw,
+                    fleetWin: playerData.fleetWin,
+                    fleetLoss: playerData.fleetLoss,
+                    fleetDraw: playerData.fleetDraw
+                }
             );
 
             await interaction.editReply({ embeds: [embed] });
